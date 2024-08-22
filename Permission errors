@@ -1,5 +1,5 @@
 while running ubuntu wsl you might run into some permission errors
-just like me but there are some solutions that is found,
+just like me but there are some solutions that I found,
 here there are.
 The permission error you're encountering when running `buildozer -v android debug` on Ubuntu WSL (Windows Subsystem for Linux) is a common issue due to the way WSL interacts with the file system, particularly when dealing with file permissions. Here are some steps you can take to resolve the issue:
 
