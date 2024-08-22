@@ -1,0 +1,89 @@
+while running ubuntu wsl you might run into some permission errors
+just like me but there are some solutions that is found,
+here there are.
+The permission error you're encountering when running `buildozer -v android debug` on Ubuntu WSL (Windows Subsystem for Linux) is a common issue due to the way WSL interacts with the file system, particularly when dealing with file permissions. Here are some steps you can take to resolve the issue:
+
+### 1. **Check and Set Permissions**
+   
+   Ensure that the necessary files, particularly the `main.py` and any other files or directories in your project, have the correct permissions:
+
+   ```bash
+   chmod +x main.py
+   chmod -R 755 .
+   ```
+
+   The `755` permission allows the owner to read, write, and execute, and others to read and execute the files and directories. 
+
+   If the error is related to `adb` or other executables, make sure they are executable:
+
+   ```bash
+   chmod +x path/to/adb
+   ```
+
+### 2. **Run as Root (if necessary)**
+
+   If you're still encountering permission errors, you can try running `buildozer` with `sudo`:
+
+   ```bash
+   sudo buildozer -v android debug
+   ```
+
+   However, this is generally not recommended unless absolutely necessary, as it can lead to other permission-related issues.
+
+### 3. **Adjusting WSL File Permissions**
+
+   Sometimes WSL can inherit file permissions from Windows, which might not be fully compatible with Linux commands. You can try mounting the file system with modified permissions:
+
+   Edit the `/etc/wsl.conf` file (create it if it doesn't exist):
+
+   ```bash
+   sudo nano /etc/wsl.conf
+   ```
+
+   Add the following:
+
+   ```ini
+   [automount]
+   options = "metadata,umask=22,fmask=11"
+   ```
+
+   This will adjust the default permissions when WSL mounts the file system.
+
+   After editing, restart WSL:
+
+   ```bash
+   wsl --shutdown
+   ```
+
+   Then, reopen your WSL terminal.
+
+### 4. **Check for Conflicting Processes**
+
+   Sometimes, there could be conflicting processes or locked files that cause permission issues. Ensure that no other process is using the files or directories you’re working with.
+
+### 5. **Ensure ADB is Running**
+
+   Make sure that `adb` is running with appropriate permissions. Sometimes the error may not be directly related to Buildozer but to the interaction with `adb`. You can start `adb` manually with:
+
+   ```bash
+   adb start-server
+   ```
+
+   If `adb` is in a non-standard location, make sure its path is correctly set in your environment variables or Buildozer spec file.
+
+### 6. **Switch to Ubuntu Terminal**
+
+   If the problem persists, consider trying to run the Buildozer command from a full Ubuntu terminal, either in a virtual machine or dual-boot, instead of WSL. This can sometimes resolve persistent permission issues caused by the WSL environment.
+
+### 7. **Use a Virtual Environment**
+
+   It's a good practice to use a Python virtual environment to isolate your dependencies and permissions. If you aren't already doing this, you might want to try setting up a virtual environment for your project:
+
+   ```bash
+   python3 -m venv myenv
+   source myenv/bin/activate
+   ```
+
+   Then, install the necessary dependencies and try running Buildozer again.
+
+By following these steps, you should be able to resolve the permission error and successfully run `buildozer -v android debug`. If the issue persists, the specific error message you're encountering would provide further clues for troubleshooting.
